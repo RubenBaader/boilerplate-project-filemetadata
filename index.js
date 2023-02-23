@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config()
+require('dotenv').config();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' }) // placeholder upload destination
 
 const app = express();
 
@@ -11,8 +13,12 @@ app.get('/', (req, res) => {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
-app.post('/api/fileanalyse', (req, res) => {
-  res.json({MSG : "HELLO World!"})
+app.post('/api/fileanalyse', upload.single('upfile'), (req, res) => {
+  res.json({
+    name : req.file.originalname,
+    type : req.file.mimetype,
+    size : req.file.size
+  })
 });
 
 
